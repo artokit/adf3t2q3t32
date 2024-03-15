@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace WebApplication10.Domain;
+namespace EducationService.Domain;
 
 public class DatabaseConnection
 {

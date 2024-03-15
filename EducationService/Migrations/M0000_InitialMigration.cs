@@ -1,7 +1,7 @@
 using FluentMigrator;
 using FluentMigrator.Snowflake;
 
-namespace WebApplication10.Migrations;
+namespace EducationService.Migrations;
 
 [Migration(1)]
 public class M0000_InitialMigration : Migration

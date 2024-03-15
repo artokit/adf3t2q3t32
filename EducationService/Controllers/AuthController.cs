@@ -1,8 +1,8 @@
+using EducationService.Dto;
+using EducationService.Services;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication10.Dto;
-using WebApplication10.Services;
 
-namespace WebApplication10.Controllers;
+namespace EducationService.Controllers;
 
 [ApiController]
 [Route("[controller]")]

@@ -1,11 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using EducationService.Dto;
+using EducationService.Models;
+using EducationService.Repositories.Interfaces;
 using Microsoft.IdentityModel.Tokens;
-using WebApplication10.Dto;
-using WebApplication10.Models;
-using WebApplication10.Repositories.Interfaces;
 
-namespace WebApplication10.Services;
+namespace EducationService.Services;
 
 public class UserService
 {

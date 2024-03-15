@@ -1,4 +1,4 @@
-namespace WebApplication10.Models;
+namespace EducationService.Models;
 
 public class User
 {

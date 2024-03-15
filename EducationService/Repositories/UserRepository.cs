@@ -1,9 +1,9 @@
 using Dapper;
-using WebApplication10.Domain;
-using WebApplication10.Models;
-using WebApplication10.Repositories.Interfaces;
+using EducationService.Domain;
+using EducationService.Models;
+using EducationService.Repositories.Interfaces;
 
-namespace WebApplication10.Repositories;
+namespace EducationService.Repositories;
 
 public class UserRepository : IUserRepository
 {

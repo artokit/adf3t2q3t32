@@ -1,4 +1,4 @@
-namespace WebApplication10.Dto;
+namespace EducationService.Dto;
 
 public class TokensDto
 {

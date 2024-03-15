@@ -1,6 +1,6 @@
-using WebApplication10.Models;
+using EducationService.Models;
 
-namespace WebApplication10.Repositories.Interfaces;
+namespace EducationService.Repositories.Interfaces;
 
 public interface IUserRepository
 {

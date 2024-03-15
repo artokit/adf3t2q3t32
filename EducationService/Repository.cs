@@ -1,4 +1,4 @@
-namespace WebApplication10;
+namespace EducationService;
 
 public class Repository
 {

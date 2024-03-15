@@ -2,11 +2,11 @@ using System.Reflection;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using WebApplication10;
-using WebApplication10.Domain;
-using WebApplication10.Repositories;
-using WebApplication10.Repositories.Interfaces;
-using WebApplication10.Services;
+using EducationService;
+using EducationService.Domain;
+using EducationService.Repositories;
+using EducationService.Repositories.Interfaces;
+using EducationService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");

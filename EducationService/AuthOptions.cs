@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WebApplication10;
+namespace EducationService;
 
 public class AuthOptions
 {
