@@ -10,14 +10,45 @@ services:
     networks:
       - backend
     ports:
-      - "5431:5432"
+      - "5432:5432"
     volumes:
       - database-pg:/var/lib/postgresql/data
+        
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    depends_on:
+      - database
+      - nginx
+    restart: always
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 2048M
+        
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+    networks:
+      - backend
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+      
 networks:
   backend:
     driver: bridge
-  hub_network:
-    external: false
 
 volumes:
   database-pg:

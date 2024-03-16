@@ -6,7 +6,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
 RUN dotnet restore "EducationService/EducationService.csproj"
-WORKDIR "/src/TgBotApi"
+WORKDIR "/src/EducationService"
 RUN dotnet build "EducationService.csproj" -c Release -o /app/build
 
 FROM build AS publish
