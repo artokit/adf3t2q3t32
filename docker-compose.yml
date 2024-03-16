@@ -30,9 +30,9 @@ services:
       replicas: 1
       resources:
         limits:
-          memory: 1024M
-        reservations:
           memory: 2048M
+        reservations:
+          memory: 1024M
         
   nginx:
     image: 'jc21/nginx-proxy-manager:latest'
