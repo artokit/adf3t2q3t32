@@ -1,4 +1,5 @@
 using System.Data;
+using Common.Interfaces;
 using Dapper;
 using Database.Interfaces;
 using Npgsql;
@@ -9,9 +10,9 @@ public class Connection : IConnection
 {
     private readonly string dbConnection;
 
-    public Connection(string dbConnection)
+    public Connection(IConfigurationSettings configuration)
     {
-        this.dbConnection = dbConnection;
+        this.dbConnection = configuration.DbConnection;
     }
 
     public async Task Command(IQueryObject queryObject)

@@ -1,13 +1,14 @@
 using Database;
+using Database.Interfaces;
 using EducationService.Models;
 
 namespace EducationService.Repositories;
 
 public class UserRepository 
 {
-    private Connection connection;
+    private IConnection connection;
 
-    public UserRepository(Connection connection)
+    public UserRepository(IConnection connection)
     {
         this.connection = connection;
     }

@@ -2,6 +2,7 @@ using System.Reflection;
 using Common;
 using Common.Interfaces;
 using Database;
+using Database.Interfaces;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -13,11 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //существуют со старта приложения Singleton
-builder.Services.AddSingleton<Connection>();
+
 builder.Services.AddSingleton<IConfigurationSettings, ConfigurationSettings>();
+builder.Services.AddSingleton<IConnection, Connection>();
 
 //создаются каждый http запрос Scoped
 builder.Services.AddScoped<UserRepository>();
@@ -55,6 +58,7 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseRouting();
 app.UseAuthentication();
 
 app.Run();
