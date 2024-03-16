@@ -1,44 +1,38 @@
-using Dapper;
-using EducationService.Domain;
+using Database;
 using EducationService.Models;
-using EducationService.Repositories.Interfaces;
 
 namespace EducationService.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository 
 {
-    private DatabaseConnection _connection;
-    
-    public UserRepository(DatabaseConnection connection)
+    private Connection connection;
+
+    public UserRepository(Connection connection)
     {
-        _connection = connection;
-    }
-    
-    public async Task<User> AddUser(string username, string password, string accessToken, string refreshToken)
-    {
-        using (var connection = _connection.CreateConnection())
-        {
-            return await connection.QueryFirstAsync<User>(
-                "INSERT INTO USERS(\"Username\", \"HashedPassword\", \"AccessToken\", \"RefreshToken\") VALUES(@username, @password, @accessToken, @refreshToken) RETURNING *",
-                new {username, password, accessToken, refreshToken});
-        }
+        this.connection = connection;
     }
 
-    public async Task<User?> GetUserByUsername(string username)
+    public async Task<User?> AddUser(User user)
     {
-        using (var connection = _connection.CreateConnection())
-        {
-            return await connection.QueryFirstOrDefaultAsync<User>("SELECT * FROM USERS where \"Username\" = @username", new {username});
-        }
+        var queryObject = new QueryObject(
+            $"INSERT INTO USERS(Username, Password, Email) VALUES(@username, @password, @email) RETURNING Id, Username, Password, Email",
+            new { username = user.Username, password = user.Password, email = user.Email });
+        return await connection.CommandWithResponse<User>(queryObject);
     }
 
-    public async Task<User> UpdateTokens(string username, string accessToken, string refreshToken)
+    public async Task<User?> GetByUsername(string username)
     {
-        using (var connection = _connection.CreateConnection())
-        {
-            return await connection.QueryFirstAsync<User>(
-                "UPDATE USERS SET \"AccessToken\" = @accessToken, \"RefreshToken\" = @refreshToken where \"Username\" = @username RETURNING *",
-                new {accessToken, refreshToken, username});
-        }
+        var queryObject = new QueryObject(
+            "SELECT Id, Username, Password, Email FROM USERS WHERE Username = @username",
+            new { username });
+        return await connection.FirstOrDefault<User>(queryObject);
+    }
+
+    public async Task<User?> GetById(int id)
+    {
+        var queryObject = new QueryObject(
+            "SELECT Id, Username, Password, Email FROM USERS WHERE Id = @id",
+            new { id });
+        return await connection.FirstOrDefault<User>(queryObject);
     }
 }

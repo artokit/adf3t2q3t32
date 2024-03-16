@@ -1,22 +1,37 @@
 using System.Reflection;
+using Common;
+using Common.Interfaces;
+using Database;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using EducationService;
-using EducationService.Domain;
 using EducationService.Repositories;
-using EducationService.Repositories.Interfaces;
 using EducationService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddSingleton<DatabaseConnection>();
 builder.Services.AddSwaggerGen();
-builder.Services.AddFluentMigratorCore().ConfigureRunner(rb => rb.AddPostgres().WithGlobalConnectionString(connectionString).ScanIn(Assembly.GetExecutingAssembly()).For.Migrations()).AddLogging(rb => rb.AddFluentMigratorConsole());
+
+//существуют со старта приложения Singleton
+builder.Services.AddSingleton<Connection>();
+builder.Services.AddSingleton<IConfigurationSettings, ConfigurationSettings>();
+
+//создаются каждый http запрос Scoped
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthorizationService>();
+
+
+//создаются раз когда вызываются Transident
+
+
+builder.Services.AddFluentMigratorCore()
+    .ConfigureRunner(rb => rb.AddPostgres().WithGlobalConnectionString(connectionString).ScanIn(Assembly.GetExecutingAssembly()).For.Migrations())
+    .AddLogging(rb => rb.AddFluentMigratorConsole());
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
@@ -32,10 +47,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 var app = builder.Build();
 var serviceProvider = app.Services.CreateScope().ServiceProvider;
+
 var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
 runner.MigrateUp();
+
+app.UseHttpsRedirection();
 app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseAuthentication();
+
 app.Run();

@@ -1,54 +1,30 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using EducationService.Dto;
 using EducationService.Models;
-using EducationService.Repositories.Interfaces;
-using Microsoft.IdentityModel.Tokens;
+using EducationService.Repositories;
 
 namespace EducationService.Services;
 
 public class UserService
 {
-    private IUserRepository _userRepository;
-    
-    public UserService(IUserRepository userRepository)
+    private readonly UserRepository userRepository;
+
+    public UserService(UserRepository userRepository)
     {
-        _userRepository = userRepository;
+        this.userRepository = userRepository;
     }
 
-    public async Task<TokensDto> AddUser(string username, string password)
+    public async Task<User?> AddUser(User user)
     {
-        var tokens = new TokensDto{AccessToken = GenerateJwtToken(username), RefreshToken = GenerateJwtToken(username, AuthOptions.LifeTimeRefreshToken)};
-        await _userRepository.AddUser(username, password, tokens.AccessToken, tokens.RefreshToken);
-        return tokens;
+        return await userRepository.AddUser(user);
     }
     
-    public string GenerateJwtToken(string username, int timeExpire = AuthOptions.LifeTimeAccessToken)
+
+    public async Task<User?> GetById(int id)
     {
-        var claims = new List<Claim>() { new Claim(ClaimTypes.Name, username) };
-        var jwt = new JwtSecurityToken(
-            issuer: AuthOptions.Issuer,
-            audience: AuthOptions.Audience,
-            claims: claims, 
-            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(timeExpire)), 
-            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-        return new JwtSecurityTokenHandler().WriteToken(jwt);
+        return await userRepository.GetById(id);
     }
 
-    public async Task<bool> UserExist(string username)
+    public async Task<User?> GetByUsername(string username)
     {
-        return await _userRepository.GetUserByUsername(username) is not null;
-    }
-
-    public async Task<User?> GetUser(string username)
-    {
-        return await _userRepository.GetUserByUsername(username);
-    }
-
-    public async Task<TokensDto> UpdateUserTokens(string username)
-    {
-        var tokens = new TokensDto{AccessToken = GenerateJwtToken(username), RefreshToken = GenerateJwtToken(username, AuthOptions.LifeTimeRefreshToken)};
-        await _userRepository.UpdateTokens(username, tokens.AccessToken, tokens.RefreshToken);
-        return tokens;
+        return await userRepository.GetByUsername(username);
     }
 }

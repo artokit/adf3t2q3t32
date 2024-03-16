@@ -11,9 +11,7 @@ public class M0000_InitialMigration : Migration
         Create.Table("users")
             .WithColumn("Id").AsInt64().Identity().NotNullable().PrimaryKey()
             .WithColumn("Username").AsString().Unique().NotNullable()
-            .WithColumn("HashedPassword").AsString().NotNullable()
-            .WithColumn("AccessToken").AsString().Nullable()
-            .WithColumn("RefreshToken").AsString().Nullable();
+            .WithColumn("Password").AsString().NotNullable();
     }
 
     public override void Down()
