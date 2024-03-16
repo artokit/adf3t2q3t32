@@ -14,9 +14,10 @@ public class UserService
 
     public async Task<User?> AddUser(User user)
     {
+        user.Password = Common.Common.PasswordHash(user.Password);
         return await userRepository.AddUser(user);
     }
-    
+
 
     public async Task<User?> GetById(int id)
     {

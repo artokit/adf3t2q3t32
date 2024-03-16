@@ -21,7 +21,7 @@ public class AuthorizationService
     public async Task<AuthResponseDto?> AuthByLoginPassword(string username, string password)
     {
         var user = await userService.GetByUsername(username);
-        if (user is null || user.Password != PasswordHash(password))
+        if (user is null || user.Password != Common.Common.PasswordHash(password))
         {
             return null;
         }
@@ -35,7 +35,6 @@ public class AuthorizationService
         {
             return null;
         }
-
         var userAdded = await userService.AddUser(user);
         return userAdded is null ? null : new AuthResponseDto { AccessToken = GenerateAccessToken(userAdded), RefreshToken = GenerateRefreshToken(userAdded) };
     }
@@ -80,13 +79,5 @@ public class AuthorizationService
     {
         var claims = new List<Claim> { new(ClaimType.Id.ToString(), userId.ToString()) };
         return claims;
-    }
-
-    private static string PasswordHash(string password)
-    {
-        var sha256 = SHA256.Create();
-        var bytes = Encoding.UTF8.GetBytes(password);
-        var hash = sha256.ComputeHash(bytes);
-        return Convert.ToBase64String(hash);
     }
 }
