@@ -20,6 +20,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - backend
+    ports:
+        - "8080:80"
     depends_on:
       - database
       - nginx
